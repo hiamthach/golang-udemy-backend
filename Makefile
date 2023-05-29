@@ -1,0 +1,12 @@
+postgres:
+	docker run --name golang-udemy-backend -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=123456 -d postgres:12-alpine
+createdb:
+	docker exec -it golang-udemy-backend createdb --username=root --owner=root golang_udemy_backend
+dropdb:
+	docker exec -it golang-udemy-backend dropdb golang_udemy_backend
+migrateup:
+	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose up
+migratedown:
+	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down
+
+.PHONY: postgres createdb dropdb migrateup migratedown
