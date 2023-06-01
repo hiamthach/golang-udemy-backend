@@ -10,5 +10,7 @@ migratedown:
 	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down
 sqlc:
 	docker run --rm -v ${pwd}:/src -w /src kjconroy/sqlc generate
+test:
+	go test -v -cover ./...
 
 .PHONY: postgres createdb dropdb migrateup migratedown sqlc
