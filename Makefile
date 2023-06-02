@@ -10,8 +10,16 @@ dropdb:
 migrateup:
 	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose up
 
+migrateup1:
+	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose up 1
+
+
 migratedown:
 	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down
+
+migratedown1:
+	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down 1
+
 
 sqlc:
 	docker run --rm -v ${pwd}:/src -w /src kjconroy/sqlc generate
@@ -25,4 +33,4 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go  github.com/hiamthach/golang-udemy-backend/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc server
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc server migrateup1 migratedown1 test mock
