@@ -13,7 +13,6 @@ migrateup:
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose up 1
 
-
 migratedown:
 	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down
 
