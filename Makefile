@@ -1,3 +1,5 @@
+DB_URL=postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable
+
 postgres:
 	docker run --name golang-udemy-backend --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=123456 -d postgres:12-alpine
 
@@ -8,16 +10,16 @@ dropdb:
 	docker exec -it golang-udemy-backend dropdb golang_udemy_backend
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose up
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose up 2
+	migrate -path db/migration -database "$(DB_URL)" -verbose up 2
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
 
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:123456@localhost:5432/golang_udemy_backend?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
 
 sqlc:
@@ -35,4 +37,10 @@ mock:
 docker-run:
 	docker run --name golang-udemy-backend-docker --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:123456@golang-udemy-backend:5432/golang_udemy_backend?sslmode=disable" golang-udemy-backend:latest
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc server migrateup1 migratedown1 test mock
+db_docs:
+	dbdocs build doc/db.dbml
+
+db_schema:
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc server migrateup1 migratedown1 test mock docker-run db_docs db_schema
